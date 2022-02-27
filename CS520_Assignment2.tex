@@ -1,0 +1,87 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Do not alter this block (unless you're familiar with LaTeX
+\documentclass{article}
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb,amsfonts, fancyhdr, color, comment, graphicx, environ}
+\usepackage{xcolor}
+\usepackage{mdframed}
+\usepackage[shortlabels]{enumitem}
+\usepackage{indentfirst}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+}
+
+
+\pagestyle{fancy}
+
+
+\newenvironment{problem}[2][Problem]
+    { \begin{mdframed}[backgroundcolor=gray!20] \textbf{#1 #2} \\}
+    {  \end{mdframed}}
+
+% Define solution environment
+\newenvironment{solution}{\textbf{Solution}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Fill in the appropriate information below
+\lhead{Michael Yen and Jay Patel}
+\rhead{CS520} 
+\chead{\textbf{Assignment 2}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+\begin{problem}{1}
+Consider the game search tree given in the figure below.
+a. Apply MinMax (minimax) algorithm to the game tree. Write down the intermediate values at
+the nodes. What is the best sequence of moves at the max node a (a path along the tree)? What
+is the utility?
+b. Apply MinMax with alpha-beta pruning in left-to-right order. Write down all nodes that are
+visited in the order they are visited. Here, by “visited”, we mean the first time a node is seen by
+the algorithm. Whenever truncation is applied, i.e., when part of the tree is skipped, provide the
+node where this is happening and explain why the truncation is applied. In particular, write down
+the values of $\alpha$ and $\beta$ at this point.
+\end{problem}
+
+\begin{solution}
+\end{solution}
+
+\begin{problem}{2}
+Game in normal form. Consider the payoff matrix given in the figure. For each entry,
+the first number is P1’s payoff and the second number if P2’s payoff.
+a. Is there a dominant strategy (from 1, 2, 3) for player 1? And player 2 (from a, b)? If the answer
+is yes for either player, provide the corresponding dominant strategy or strategies. Justify your answer.
+\end{problem}
+\begin{solution}
+
+There is a dominant strategy for player 1, which is to always choose the third action (3). Assume player 2 chooses (a). If player 1 chooses (1), they get a payoff of 1; if they choose (2), they get a payoff of 6;  if they choose (3), they get a payoff of 6. So (1) is eliminated from being dominant already. Now assume player 2 chooses (b). If player 1 chooses (2), they get a payoff of 3; if player 1 chooses (3) they get a payoff of 4. So (3) will always give a higher payoff than any of the other choices. \\
+
+Player 2 does not have a dominant strategy. Assume player 1 chooses (1). If player 2 chooses (a) they get a payoff of 2; if player 2 chooses (b) they get a payoff of 4. So in that case player 2 should choose (b). Now assume player 1 chooses (2). If player 2 chooses (a) they get a payoff of 3; if player 2 chooses (b) they get a payoff of 1. In this case player 2 should choose (a). Since we already have two cases where player 2 should choose a different action, there is no dominant strategy. \\
+
+One Nash equilibrium is at (3, b). Player 1 has nothing to gain by moving from (3, b) to either (1, b) or (2, b); their best payoff is still 4. Player 2 has nothing to gain from moving from (3, b) to (3, a), since that would lower their payoff from 7 to 3. Thus (3, b) is a Nash equilibrium. \\
+
+Another Nash equilibrium is at (2, a). Player 1 cannot gain anything by moving from (2, a) to either (1, a) or (3, a); their best payoffi s 6. Likewise, Player 2 cannot gain anything by moving from (2, a) to (2, b), which would lower their payoff from 3 to 1. Thus (2, a) is a Nash equilibrium. \\
+
+The last Nash equilibrium is at (1, b). Player 1 does not gain by moving from (1, b) to either (3, b) or (2, b). Similarly, Player 2 does not gain by moving from (1, b) to (1, a). So (1, b) is a Nash equilibrium. \\
+
+Thus, there are 3 Nash equilibriums: (3, b), (2, a), and (1, b).
+\end{solution}
+\begin{problem}{3}
+You are to manually run the MCTS algorithm for the navigation example covered in class for 10
+iterations. For this, you will need simulation results for
+nodes at tree depth up to 2, which is provided in the table
+below. For node selection, you may need to pick among
+four actions. The directions for the 10 rounds are preselected as N, W, S, E, W, N, E, N, E, S. If an action leads
+to a node that is already simulated, pick the next node in
+the counterclockwise direction for which a simulation has
+not been performed.
+For the answer, compute for each iteration which node is
+selected for expansion, and update the reward and the number of visits at nodes after each iteration. At the end, indicate which action is predicted for the
+next iteration at the root node.
+\end{problem}
+\end{document}
