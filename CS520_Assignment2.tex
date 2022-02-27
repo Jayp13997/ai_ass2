@@ -48,7 +48,56 @@ node where this is happening and explain why the truncation is applied. In parti
 the values of $\alpha$ and $\beta$ at this point.
 \end{problem}
 
-\begin{solution}\\
+\begin{solution} \\
+\underline{Regular MinMax / part a} \\
+a: 14 (c) \\
+b: 12 (e) \\
+c: 14 (j) \\
+d: 9 (w) \\
+e: 12 \\
+f: 23 \\
+g: 24 \\
+h: 21 (n) \\
+i: 26 (q) \\
+j: 14 (s) \\
+k: 10 (u) \\
+l: 9 (w) \\
+m: 12 \\ 
+n: 21 \\
+o: 25 \\
+p: 2 \\
+q: 26 \\
+r: 11 \\
+s: 14 \\ 
+t: 4 \\
+u: 10 \\
+v: 8 \\
+w: 9 \\
+The best sequence of nodes at a is $a \rightarrow c \rightarrow j \rightarrow s$, leading to a utility of 14. \\
+\underline{MinMax with alpha-beta pruning / part b} \\
+a \\
+b \\ 
+e \\
+f \\
+g \\
+c \\
+h \\
+m \\
+n \\
+i \\
+o \\
+At this point nodes p and q (w/ values 2 and 26) are pruned from the true because $[\alpha, \beta] = [12,21]$ and the value returned by the minimum function on node o was 25. Since $25 \ge 21$, the function finishes and returns 25. \\
+j \\
+r \\
+s \\
+d \\
+k \\
+t \\ 
+u \\
+At this point the node l and its children v and w (w/ values 8 and 9) are pruned from the tree because $[\alpha, \beta] = [14, \infty]$ and the value returned by the maximum function on node k was 10. Since $10 \le 14$, the function finishes and returns 10.
+\end{solution}
+
+\begin{solution}
 
 \textbf{(a)}\\\relax
 
@@ -69,7 +118,7 @@ the values of $\alpha$ and $\beta$ at this point.
 [l, 9]\relax
 
 
-Best sequence of moves: a \rightarrow c \rightarrow j \rightarrow s.
+Best sequence of moves: $a \rightarrow c \rightarrow j \rightarrow s$.
 
 This sequence gives the utility of 14.\\
 
@@ -78,76 +127,73 @@ This sequence gives the utility of 14.\\
 
 format: [node, $\alpha$ value, $\beta$ value]\\
 
-[a, -\infty, \infty]\relax
+$[a, -\infty, \infty]$\relax
 
-[b, -\infty, \infty]\relax
+$[b, -\infty, \infty]$\relax
 
-[e, -\infty, 12]\relax
+$[e, -\infty, 12]$\relax
 
-[f, -\infty, 12]\relax
+$[f, -\infty, 12]$\relax
 
-[g, 12, 12]\relax
+$[g, 12, 12]$\relax
 
 So, value at b = 12\relax
 
-[c, -\infty, \infty]\relax
+$[c, -\infty, \infty]$\relax
 
-[h, -\infty, \infty]\relax
+$[h, -\infty, \infty]$\relax
 
-[m, ,12, \infty]\relax
+$[m, ,12, \infty]$\relax
 
-[n, 21, \infty]\relax
+$[n, 21, \infty]$\relax
 
 So, value at h = 21\relax
 
-[i, -\infty, \infty]\relax
+$[i, -\infty, \infty]$\relax
 
-[o, 25, \infty]\relax
+$[o, 25, \infty]$\relax
 
-[p, 25, \infty]\relax
+$[p, 25, \infty]$\relax
 
-[q, 26, \infty]\relax
+$[q, 26, \infty]$\relax
 
 So, value at i = 26\relax
 
-[j, -\infty, \infty]\relax
+$[j, -\infty, \infty]$\relax
 
-[r, 11, \infty]\relax
+$[r, 11, \infty]$\relax
 
-[s, 14, \infty]\relax
+$[s, 14, \infty]$\relax
 
 So, value at j = 14\relax
 
-[h, -\infty, 21]\relax
+$[h, -\infty, 21]$\relax
 
-[i, -\infty, 21]\relax
+$[i, -\infty, 21]$\relax
 
-[j, -\infty, 14]\relax
+$[j, -\infty, 14]$\relax
 
 So, value at c = 14\relax
 
-[d, -\infty, \infty]\relax
+$[d, -\infty, \infty]$\relax
 
-[k, -\infty, \infty]\relax
+$[k, -\infty, \infty]$\relax
 
-[t, 4, \infty]\relax
+$[t, 4, \infty]$\relax
 
-[u, 10, \infty]\relax
+$[u, 10, \infty]$\relax
 
 So, value at k = 10\relax
 
 Since d is a minimizer node, it will not let maximizer get a value higher than 10 and maximizer can get a higher value by following other routes. So, we can prune the right subtree of d which includes l, v and w nodes.
 
-[b, 12, 12]\relax
+$[b, 12, 12]$\relax
 
-[c, 14, 12]\relax
+$[c, 14, 12]$\relax
 
-[d, 14, 12]\relax
+$[d, 14, 12]$\relax
 
 So, value at a = 14\\
-
-
-
 \end{solution}
 
 \begin{problem}{2}
