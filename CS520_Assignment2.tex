@@ -97,105 +97,6 @@ u \\
 At this point the node l and its children v and w (w/ values 8 and 9) are pruned from the tree because $[\alpha, \beta] = [14, \infty]$ and the value returned by the maximum function on node k was 10. Since $10 \le 14$, the function finishes and returns 10.
 \end{solution}
 
-\begin{solution}
-
-\textbf{(a)}\\\relax
-
-[a, 14]\relax
-
-[b, 12]\relax
-
-[c, 14]\relax
-
-[d, 9]\relax
-
-[h, 21]\relax
-
-[j, 14]\relax
-
-[k, 10]\relax
-
-[l, 9]\relax
-
-
-Best sequence of moves: $a \rightarrow c \rightarrow j \rightarrow s$.
-
-This sequence gives the utility of 14.\\
-
-
-\textbf{(b)}\\
-
-format: [node, $\alpha$ value, $\beta$ value]\\
-
-$[a, -\infty, \infty]$\relax
-
-$[b, -\infty, \infty]$\relax
-
-$[e, -\infty, 12]$\relax
-
-$[f, -\infty, 12]$\relax
-
-$[g, 12, 12]$\relax
-
-So, value at b = 12\relax
-
-$[c, -\infty, \infty]$\relax
-
-$[h, -\infty, \infty]$\relax
-
-$[m, ,12, \infty]$\relax
-
-$[n, 21, \infty]$\relax
-
-So, value at h = 21\relax
-
-$[i, -\infty, \infty]$\relax
-
-$[o, 25, \infty]$\relax
-
-$[p, 25, \infty]$\relax
-
-$[q, 26, \infty]$\relax
-
-So, value at i = 26\relax
-
-$[j, -\infty, \infty]$\relax
-
-$[r, 11, \infty]$\relax
-
-$[s, 14, \infty]$\relax
-
-So, value at j = 14\relax
-
-$[h, -\infty, 21]$\relax
-
-$[i, -\infty, 21]$\relax
-
-$[j, -\infty, 14]$\relax
-
-So, value at c = 14\relax
-
-$[d, -\infty, \infty]$\relax
-
-$[k, -\infty, \infty]$\relax
-
-$[t, 4, \infty]$\relax
-
-$[u, 10, \infty]$\relax
-
-So, value at k = 10\relax
-
-Since d is a minimizer node, it will not let maximizer get a value higher than 10 and maximizer can get a higher value by following other routes. So, we can prune the right subtree of d which includes l, v and w nodes.
-
-$[b, 12, 12]$\relax
-
-$[c, 14, 12]$\relax
-
-$[d, 14, 12]$\relax
-
-So, value at a = 14\\
-\end{solution}
-
 \begin{problem}{2}
 Game in normal form. Consider the payoff matrix given in the figure. For each entry,
 the first number is P1’s payoff and the second number if P2’s payoff.
@@ -229,4 +130,97 @@ For the answer, compute for each iteration which node is
 selected for expansion, and update the reward and the number of visits at nodes after each iteration. At the end, indicate which action is predicted for the
 next iteration at the root node.
 \end{problem}
+
+\begin{solution}
+\begin{verbatim}
+Format
+[Node, Reward, Number of Visits] UCB
+
+Root: [(4,4), 0, 0]
+
+1: Expand North
+Expand (3,4)
+[(3,4), 0.22, 1]
+
+2: Expand West
+Expand (4,3)
+[(4,3), 0.7, 1]
+
+3: Expand South
+Expand (5,4)
+[(5,4), 0.165, 1]
+
+4: Expand East and Calculate UCB because all four nodes are expanded now
+Expand (4,5)
+[(4,5), 0.135, 1] 1.31
+[(3,4), 0.22, 1] 1.40
+[(4,3), 0.7, 1] 1.88 - To be Selected
+[(5,4), 0.165, 1] 1.34
+
+5: Expand West
+Expand (4,2) which is west of (4,3)
+[(4,3), 1.37, 2] 1.58 - To be Selected
+[(3,4), 0.22, 1] 1.49
+[(5,4), 0.165, 1] 1.43
+[(4,5), 0.135, 1] 1.40
+[(4,2), 0.67, 1]
+
+6: Expand North
+Expand (3,3) which is north of (4,3)
+[(4,3), 1.735, 3] 1.35
+[(3,4), 0.22, 1] 1.56 - To be Selected
+[(5,4), 0.165, 1] 1.50
+[(4,5), 0.135, 1] 1.47
+[(4,2), 0.67, 1]
+[(3,3), 0.365, 1]
+
+7: Expand East
+Expand (3,5) which is east of (3,4)
+[(4,3), 1.735, 3] 1.38
+[(3,4), 0.32, 2] 1.15
+[(5,4), 0.165, 1] 1.56 - To be Selected
+[(4,5), 0.135, 1] 1.53
+[(4,2), 0.67, 1]
+[(3,3), 0.365, 1]
+[(3,5), 0.1, 1]
+
+8: Expand North
+Expand (4,4) which is north of (5,4)
+[(4,3), 1.735, 3] 1.41
+[(3,4), 0.32, 2] 1.18
+[(5,4), 0.38, 2] 1.21
+[(4,5), 0.135, 1] 1.58 - To be Selected
+[(4,2), 0.67, 1]
+[(3,3), 0.365, 1]
+[(3,5), 0.1, 1]
+[(4,4), 0.215, 1]
+
+9: Expand East
+Expand (4,6) which is east of (4,5)
+[(4,3), 1.735, 3] 1.43 - To be Selected
+[(3,4), 0.32, 2] 1.21
+[(5,4), 0.38, 2] 1.24
+[(4,5), 0.145, 2] 1.12
+[(4,2), 0.67, 1]
+[(3,3), 0.365, 1]
+[(3,5), 0.1, 1]
+[(4,4), 0.215, 1]
+[(4,6), 0.01, 1]
+
+10: Expand South
+Expand (5,3) which is south of (4,3)
+[(4,3), 2.095, 4] 1.28 - Now fully expanded
+[(3,4), 0.32, 2] 1.23
+[(5,4), 0.38, 2] 1.26
+[(4,5), 0.145, 2] 1.15
+[(4,2), 0.67, 1] 2.19
+[(3,3), 0.365, 1] 1.882 - To be selected next
+[(3,5), 0.1, 1]
+[(4,4), 0.215, 1] 1.73
+[(4,6), 0.01, 1]
+[(5,3), 0.36, 1] 1.8774
+
+This is the end of the 10 iterations.
+\end{verbatim}
+\end{solution}
 \end{document}
