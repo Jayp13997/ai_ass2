@@ -300,7 +300,48 @@ def minimax_ab(state, player, alpha=-10000000, beta=10000000):
     row = -1
     column = -1
     # Your implementation goes here
-    return (value, row, column)
+
+    (blackpieces, whitepieces) = count_pieces(state)
+    value = blackpieces - whitepieces
+
+    if is_terminal_state(state):
+        return (value, row, column)
+    
+    if player == 'W':
+        best_move = (10000000, -1, -1)
+    else:
+        best_move = (-10000000, -1, -1)
+
+    moves = find_all_moves(state, player)
+
+    if not moves: # no available moves for the player yet not a terminal state, must do nothing
+        moves.append((-1,-1))
+
+    for move in moves:
+        if move[0] != -1: # not a do-nothing move
+            move_state = execute_move(state, player, move[0], move[1])
+        else: # do-nothing move
+            move_state = state
+
+        (value, row, column) = minimax_ab(move_state, get_opponent(player), alpha, beta)
+        if player == 'B' and value > best_move[0]:
+            best_move = (value, move[0], move[1])
+            if(best_move[0] >= beta): # beta pruning
+                # print("pruning at node: " + str(best_move))
+                return best_move
+
+            alpha = max(alpha, best_move[0])
+
+        elif player == 'W' and value < best_move[0]:
+            best_move = (value, move[0], move[1])
+            if(best_move[0] <= alpha): # alpha pruning
+                # print("pruning at node: " + str(best_move))
+                return best_move
+
+            beta = min(beta, best_move[0])
+
+    return best_move
+    # return (value, row, column)
 
 
 """
@@ -313,4 +354,56 @@ def full_minimax_ab(state, player):
     value = 0
     move_sequence = []
     # Your implementation goes here
+
+    (value, move_deque) = full_minimax_ab_helper(state, player, -999, 999)
+    move_sequence = list(move_deque)
+
     return (value, move_sequence)
+
+def full_minimax_ab_helper(state, player, alpha, beta):
+
+    (blackpieces, whitepieces) = count_pieces(state)
+    board_value = blackpieces - whitepieces
+
+    if is_terminal_state(state):
+        move_deque = deque()
+        move_deque.append((player, -1, -1))
+        return (board_value, move_deque)
+    
+    if player == 'W':
+        best_move = (999, -1, -1, deque()) # Using -999 for -infinity and 999 for +infinity
+    else:
+        best_move = (-999, -1, -1, deque())
+
+    moves = find_all_moves(state, player)
+
+    if not moves: # no available moves for the player yet not a terminal state, must do nothing
+        moves.append((-1,-1))
+
+    for move in moves:
+        if move[0] != -1: # not a do-nothing move
+            move_state = execute_move(state, player, move[0], move[1])
+        else: # do-nothing move
+            move_state = state
+
+        (move_value, move_deque) = full_minimax_ab_helper(move_state, get_opponent(player), alpha, beta)
+        if player == 'B' and move_value > best_move[0]:
+            best_move = (move_value, move[0], move[1], move_deque)
+            if(best_move[0] >= beta): # beta pruning
+                best_move[3].appendleft((player, best_move[1], best_move[2]))
+                return (best_move[0], best_move[3])
+
+            alpha = max(alpha, best_move[0])
+
+        elif player == 'W' and move_value < best_move[0]:
+            best_move = (move_value, move[0], move[1], move_deque)
+            if(best_move[0] <= alpha): # alpha pruning
+                best_move[3].appendleft((player, best_move[1], best_move[2]))
+                return (best_move[0], best_move[3])
+
+            beta = min(beta, best_move[0])
+
+    if(move[0] != -1): # add the move if it wasn't a do-nothing move
+        best_move[3].appendleft((player, best_move[1], best_move[2]))
+
+    return (best_move[0], best_move[3])
