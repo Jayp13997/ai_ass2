@@ -13,6 +13,9 @@ here that row and column both start with index 0.
 from collections import deque
 import copy
 
+terminal_states = 0
+truncations = 0
+
 def get_opponent(player):
     if player == 'B':
         return 'W'
@@ -63,6 +66,9 @@ in particular, should not share memory with the old state.
 def execute_move(state, player, row, column):
     new_state = None
     # Your implementation goes here
+
+    if(row < 0 or column < 0):
+        return state
 
     new_state = copy.deepcopy(state)
     row_max = len(state)
@@ -249,9 +255,15 @@ def full_minimax(state, player):
     (value, move_deque) = full_minimax_helper(state, player)
     move_sequence = list(move_deque)
 
+    # global terminal_states
+    # print("Number of terminal states: " + str(terminal_states))
+    # terminal_states = 0
+
     return (value, move_sequence)
 
 def full_minimax_helper(state, player):
+
+    # global terminal_states
 
     (blackpieces, whitepieces) = count_pieces(state)
     board_value = blackpieces - whitepieces
@@ -259,6 +271,7 @@ def full_minimax_helper(state, player):
     if is_terminal_state(state):
         move_deque = deque()
         move_deque.append((player, -1, -1))
+        # terminal_states += 1
         return (board_value, move_deque)
     
     if player == 'W':
@@ -351,6 +364,8 @@ that leads to an end game, using alpha-beta pruning.
 
 
 def full_minimax_ab(state, player):
+    # global terminal_states
+    # global truncations
     value = 0
     move_sequence = []
     # Your implementation goes here
@@ -358,9 +373,18 @@ def full_minimax_ab(state, player):
     (value, move_deque) = full_minimax_ab_helper(state, player, -999, 999)
     move_sequence = list(move_deque)
 
+    # print("number of terminal states: " + str(terminal_states))
+    # print("number of truncations: " + str(truncations))
+
+    # terminal_states = 0
+    # truncations = 0
+
     return (value, move_sequence)
 
 def full_minimax_ab_helper(state, player, alpha, beta):
+
+    # global terminal_states
+    # global truncations
 
     (blackpieces, whitepieces) = count_pieces(state)
     board_value = blackpieces - whitepieces
@@ -368,6 +392,7 @@ def full_minimax_ab_helper(state, player, alpha, beta):
     if is_terminal_state(state):
         move_deque = deque()
         move_deque.append((player, -1, -1))
+        # terminal_states += 1
         return (board_value, move_deque)
     
     if player == 'W':
@@ -391,6 +416,7 @@ def full_minimax_ab_helper(state, player, alpha, beta):
             best_move = (move_value, move[0], move[1], move_deque)
             if(best_move[0] >= beta): # beta pruning
                 best_move[3].appendleft((player, best_move[1], best_move[2]))
+                # truncations += 1
                 return (best_move[0], best_move[3])
 
             alpha = max(alpha, best_move[0])
@@ -399,6 +425,7 @@ def full_minimax_ab_helper(state, player, alpha, beta):
             best_move = (move_value, move[0], move[1], move_deque)
             if(best_move[0] <= alpha): # alpha pruning
                 best_move[3].appendleft((player, best_move[1], best_move[2]))
+                # truncations += 1
                 return (best_move[0], best_move[3])
 
             beta = min(beta, best_move[0])
