@@ -208,10 +208,14 @@ def minimax(state, player):
     if is_terminal_state(state):
         return (value, row, column)
     
-    best_move = (value, -1, -1)
+    if player == 'W':
+        best_move = (999, -1, -1) # Using -999 for -infinity and 999 for +infinity
+    else:
+        best_move = (-999, -1, -1)
 
     moves = find_all_moves(state, player)
-    if not moves: # no available moves yet not terminal state
+
+    if not moves: # no available moves for the player yet not a terminal state, must do nothing
         moves.append((-1,-1))
 
     for move in moves:
@@ -220,11 +224,11 @@ def minimax(state, player):
         else: # do-nothing move
             move_state = state
 
-        move_value = minimax(move_state, get_opponent(player))
-        if player == 'B' and move_value > best_move[0]:
-            best_move = (move_value, move[0], move[1])
-        elif player == 'W' and move_value < best_move[0]:
-            best_move = (move_value, move[0], move[1])
+        (value, row, column) = minimax(move_state, get_opponent(player))
+        if player == 'B' and value > best_move[0]:
+            best_move = (value, move[0], move[1])
+        elif player == 'W' and value < best_move[0]:
+            best_move = (value, move[0], move[1])
 
     return best_move
     # return (value, row, column)
@@ -258,30 +262,31 @@ def full_minimax_helper(state, player):
         return (board_value, move_deque)
     
     if player == 'W':
-        best_move = (999, -1, -1) # Using -999 for -infinity and 999 for +infinity
+        best_move = (999, -1, -1, deque()) # Using -999 for -infinity and 999 for +infinity
     else:
-        best_move = (-999, -1, -1)
+        best_move = (-999, -1, -1, deque())
 
     moves = find_all_moves(state, player)
-    if not moves: # no available moves for the player, yet not a terminal state
+
+    if not moves: # no available moves for the player yet not a terminal state, must do nothing
         moves.append((-1,-1))
 
     for move in moves:
         if move[0] != -1: # not a do-nothing move
             move_state = execute_move(state, player, move[0], move[1])
         else: # do-nothing move
-            move_state = copy.deepcopy(state)
+            move_state = state
 
         (move_value, move_deque) = full_minimax_helper(move_state, get_opponent(player))
         if player == 'B' and move_value > best_move[0]:
-            best_move = (move_value, move[0], move[1])
+            best_move = (move_value, move[0], move[1], move_deque)
         elif player == 'W' and move_value < best_move[0]:
-            best_move = (move_value, move[0], move[1])
+            best_move = (move_value, move[0], move[1], move_deque)
 
     if(move[0] != -1): # add the move if it wasn't a do-nothing move
-        move_deque.appendleft((player, move[0], move[1]))
+        best_move[3].appendleft((player, best_move[1], best_move[2]))
 
-    return (move_value, move_deque)
+    return (best_move[0], best_move[3])
 
 """
 The minimax algorithm with alpha-beta pruning. Your implementation should return the
